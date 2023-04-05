@@ -34,3 +34,11 @@ input[type='text'], input[type='email'], input[type='number'] {
 
   }
 
+
+  .checkout__cart__add{
+    padding: 5px;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 5px;
+  }
+

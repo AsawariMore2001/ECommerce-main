@@ -1,21 +1,20 @@
-import React,{useState, useRef,useEffect} from 'react'
-import { Container,Row,Col} from 'reactstrap';
-import { useParams } from 'react-router-dom';
-import Helmet from '../components/Helmet/Helmet';
-import CommonSection from '../components/UI/CommonSection';
-import '../styles/product-details.css';
-import { motion } from 'framer-motion';  
-import ProductsList from '../components/UI/ProductsList';
-import { useDispatch } from 'react-redux';
-import { cartActions } from '../redux/slices/cartSlice';
-import {toast} from 'react-toastify';
-import useGetData from '../custom-hooks/useGetData';
+import React, { useState, useRef, useEffect } from "react";
+import { Container, Row, Col } from "reactstrap";
+import { useParams } from "react-router-dom";
+import Helmet from "../components/Helmet/Helmet";
+import CommonSection from "../components/UI/CommonSection";
+import "../styles/product-details.css";
+import { motion } from "framer-motion";
+import ProductsList from "../components/UI/ProductsList";
+import { useDispatch } from "react-redux";
+import { cartActions } from "../redux/slices/cartSlice";
+import { toast } from "react-toastify";
+import useGetData from "../custom-hooks/useGetData";
 
-import{db} from '../firebase.config'
-import{ doc,getDoc} from 'firebase/firestore'
+import { db } from "../firebase.config";
+import { doc, getDoc } from "firebase/firestore";
 
 const ProductDetails = () => {
-
   const [product, setProduct] = useState({});
   const [tab, setTab] = useState("desc");
   const reviewUser = useRef("");
@@ -26,172 +25,218 @@ const ProductDetails = () => {
   const { data: products } = useGetData("products");
 
   const docRef = doc(db, "products", id);
-  console.log(docRef);
 
   useEffect(() => {
     const getProduct = async () => {
       const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setProduct(docSnap.data());
-      } else {
-        console.log("no product!");
+      try {
+        if (docSnap.exists()) {
+          setProduct(docSnap.data());
+        } else {
+          console.log("no product!");
+        }
+      } catch (err) {
+        console.log(err);
       }
     };
 
     getProduct();
   }, []);
 
-const {imgUrl,productName,price,
-  // avgRating ,reviews,
-  description, shortDesc,category}=product
-  console.log(product);
-  console.log("Hello world");
-  
+  const {
+    imgUrl,
+    productName,
+    price,
+    // avgRating ,reviews,
+    description,
+    shortDesc,
+    category,
+  } = product;
 
+  const relatedProducts = products.filter((item) => item.category === category);
 
-const relatedProducts= products.filter(item=>item.category===category)
+  const submitHandler = (e) => {
+    e.preventDefault();
 
-const submitHandler =(e)=>{
-  e.preventDefault()
+    const reviewUserName = reviewUser.current.value;
+    const reviewUserMsg = reviewMsg.current.value;
 
-  const reviewUserName = reviewUser.current.value
-  const reviewUserMsg = reviewMsg.current.value
+    const reviewObj = {
+      UserName: reviewUserName,
+      text: reviewUserMsg,
+      rating,
+    };
+    console.log(reviewObj);
+    toast.success("Review submitted");
+  };
 
-  const reviewObj={
-    UserName: reviewUserName,
-    text: reviewUserMsg,
-    rating,
-  }
-  console.log(reviewObj);
-  toast.success('Review submitted')
-};
+  const addToCart = () => {
+    dispatch(
+      cartActions.addItem({
+        id,
+        image: imgUrl,
+        productName,
+        price,
+      })
+    );
+    toast.success("Product added Succesfully");
+  };
 
-const addToCart=()=>{
-  dispatch(cartActions.addItem({
-    id,
-    image:imgUrl,
-    productName, price,
-  })
-  );
-  toast.success("Product added Succesfully");
-};
-
-useEffect(()=>{
-  window.scrollTo(0,0)
-},[product]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [product]);
 
   return (
     <Helmet title={productName}>
-      <CommonSection title={productName}/>
+      <CommonSection title={productName} />
       <section className="pt-0>">
-
         <Container>
-        <Row>
-          <Col lg="6"> 
-            <img src={imgUrl} alt=""/>
-          </Col>
+          <Row>
+            <Col lg="6">
+              <img src={imgUrl} alt="" />
+            </Col>
 
-          <Col lg="6"> 
-          <div className="product__details">
-            <h2>{productName}</h2>
-              <div className="product__rating d-flex align-items-center gap-5 mb-3">
-                <div>
-                  <motion.span whileTap={{scale:1.2}}><i class="ri-star-s-fill"></i></motion.span>
-                  <motion.span whileTap={{scale:1.2}}><i class="ri-star-s-fill"></i></motion.span>
-                  <motion.span whileTap={{scale:1.2}}><i class="ri-star-s-fill"></i></motion.span>
-                  <motion.span whileTap={{scale:1.2}}><i class="ri-star-s-fill"></i></motion.span>
-                  <motion.span whileTap={{scale:1.2}}><i class="ri-star-half-s-line"></i></motion.span>
-
+            <Col lg="6">
+              <div className="product__details">
+                <h2>{productName}</h2>
+                <div className="product__rating d-flex align-items-center gap-5 mb-3">
+                  <div>
+                    <motion.span whileTap={{ scale: 1.2 }}>
+                      <i className="ri-star-s-fill"></i>
+                    </motion.span>
+                    <motion.span whileTap={{ scale: 1.2 }}>
+                      <i className="ri-star-s-fill"></i>
+                    </motion.span>
+                    <motion.span whileTap={{ scale: 1.2 }}>
+                      <i className="ri-star-s-fill"></i>
+                    </motion.span>
+                    <motion.span whileTap={{ scale: 1.2 }}>
+                      <i className="ri-star-s-fill"></i>
+                    </motion.span>
+                    <motion.span whileTap={{ scale: 1.2 }}>
+                      <i className="ri-star-half-s-line"></i>
+                    </motion.span>
+                  </div>
                 </div>
-                {/* <p>(<span>{avgRating}</span>ratings)</p> */}
-               </div>
 
-               <div className='d-flex align-items-center gap-5 mb-3'>
-               <span className="product__price">${price}</span>
-               <span>Category: {category.toUpperCase()}</span>
-               </div>
-               <p className="mt-3">{shortDesc}</p>
+                <div className="d-flex align-items-center gap-5 mb-3">
+                  <span className="product__price">${price}</span>
+                  {<span>Category: {category}</span>}
+                </div>
+                <p className="mt-3">{shortDesc}</p>
 
-               < motion.button whileTap={{scale:1.2}}
-                className="buy__btn" onClick={addToCart}>Add to Cart </motion.button>
-            </div>
-           </Col>
-        </Row>
+                <motion.button
+                  whileTap={{ scale: 1.2 }}
+                  className="buy__btn"
+                  onClick={addToCart}
+                >
+                  Add to Cart{" "}
+                </motion.button>
+              </div>
+            </Col>
+          </Row>
         </Container>
       </section>
 
       <section>
         <Container>
           <Row>
-            <Col lg='12'>
-            <div className="tab__wrapper d-flex align-items-center gap-5">
-                <h6 className={`$'{tab==='desc'?'active__tab' : ''}`}
-                onClick={()=>setTab('desc')}>
-                  Description</h6>
-                <h6 className={`$'{tab==='rev'?'active__tab' : ''}`}
-                onClick={()=>setTab("rev")}>
-                  {/* Reviews ({reviews.length}) */}
-                  </h6>
+            <Col lg="12">
+              <div className="tab__wrapper d-flex align-items-center gap-5">
+                <h6
+                  className={`$'{tab==='desc'?'active__tab' : ''}`}
+                  onClick={() => setTab("desc")}
+                >
+                  Description
+                </h6>
+                <h6
+                  className={`$'{tab==='rev'?'active__tab' : ''}`}
+                  onClick={() => setTab("rev")}
+                ></h6>
               </div>
-              {tab==="desc"?(
-              <div className="tab__content mt-5">
-                <p>{description}</p>
-              </div>):
-              (<div className="product__review mt-5">
-                <div className="review__wrapper">
-                  {/* <ul>
-                    {
-                      reviews?.map((item,index)=>(
-                        <li kew={index} className='mb-4'>
-                          <h6>Tony Stark</h6>
-                          <span>{item.rating} ( rating)</span>
-                        <p>{item.text}</p>
-                        </li>
-                      ))
-                    } */}
-                  {/* </ul> */}
-                  
+              {tab === "desc" ? (
+                <div className="tab__content mt-5">
+                  <p>{description}</p>
+                </div>
+              ) : (
+                <div className="product__review mt-5">
+                  <div className="review__wrapper">
                     <div className="review__from">
                       <h4>Leave ypur experience</h4>
                       <form action="" onSubmit={submitHandler}>
                         <div className="form__group">
-                          <input type="text" placeholder='Enter name'
-                          ref={reviewUser}
-                          required/>
+                          <input
+                            type="text"
+                            placeholder="Enter name"
+                            ref={reviewUser}
+                            required
+                          />
                         </div>
 
                         <div className="form__group d-flex align-items-center gap-4 rating__group">
-                          <motion.span whileTap={{scale:1.2}} onClick={()=>setRating(1)}>1 <i class="ri-star-fill"></i> </motion.span>
-                          <motion.span whileTap={{scale:1.2}} onClick={()=>setRating(2)}>2 <i class="ri-star-fill"></i> </motion.span>
-                          <motion.span whileTap={{scale:1.2}} onClick={()=>setRating(3)}>3 <i class="ri-star-fill"></i> </motion.span>
-                          <motion.span whileTap={{scale:1.2}} onClick={()=>setRating(4)}>4 <i class="ri-star-fill"></i> </motion.span>
-                          <motion.span whileTap={{scale:1.2}} onClick={()=>setRating(5)}>5 <i class="ri-star-fill"></i> </motion.span>
-
+                          <motion.span
+                            whileTap={{ scale: 1.2 }}
+                            onClick={() => setRating(1)}
+                          >
+                            1 <i className="ri-star-fill"></i>{" "}
+                          </motion.span>
+                          <motion.span
+                            whileTap={{ scale: 1.2 }}
+                            onClick={() => setRating(2)}
+                          >
+                            2 <i className="ri-star-fill"></i>{" "}
+                          </motion.span>
+                          <motion.span
+                            whileTap={{ scale: 1.2 }}
+                            onClick={() => setRating(3)}
+                          >
+                            3 <i className="ri-star-fill"></i>{" "}
+                          </motion.span>
+                          <motion.span
+                            whileTap={{ scale: 1.2 }}
+                            onClick={() => setRating(4)}
+                          >
+                            4 <i className="ri-star-fill"></i>{" "}
+                          </motion.span>
+                          <motion.span
+                            whileTap={{ scale: 1.2 }}
+                            onClick={() => setRating(5)}
+                          >
+                            5 <i className="ri-star-fill"></i>{" "}
+                          </motion.span>
                         </div>
                         <div className="form__group">
                           <textarea
-                          ref={reviewMsg} rows={4} type="text" placeholder='Review Message...'
-                          required/>
+                            ref={reviewMsg}
+                            rows={4}
+                            type="text"
+                            placeholder="Review Message..."
+                            required
+                          />
                         </div>
 
-                        <motion.button whileTap={{scale:1.2}} type='submit' className="buy__btn">Submit</motion.button>
+                        <motion.button
+                          whileTap={{ scale: 1.2 }}
+                          type="submit"
+                          className="buy__btn"
+                        >
+                          Submit
+                        </motion.button>
                       </form>
                     </div>
+                  </div>
                 </div>
-              </div>)
-              } 
-              
+              )}
             </Col>
-            <Col lg='12' className='mt-5'>
-                <h2 className="related__title">You might also like </h2>
-                </Col>   
-              <ProductsList data={relatedProducts}/>
+            <Col lg="12" className="mt-5">
+              <h2 className="related__title">You might also like </h2>
+            </Col>
+            <ProductsList data={relatedProducts} />
           </Row>
         </Container>
       </section>
     </Helmet>
-  )
-}
+  );
+};
 
-export default ProductDetails
+export default ProductDetails;

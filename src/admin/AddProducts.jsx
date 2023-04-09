@@ -21,6 +21,7 @@ const AddProducts = () => {
   const addProduct = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
     try {
       const docRef = await collection(db, "products");
 

@@ -13,6 +13,9 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase.config';
 import { toast } from 'react-toastify';
 
+import { useDispatch } from "react-redux";
+import { cartActions } from "../../redux/slices/cartSlice";
+
 const nav__links = [
     {
         path: 'home',
@@ -26,13 +29,17 @@ const nav__links = [
         path: 'cart',
         display: 'Cart'
     },
+    {
+        path: 'myorders',
+        display: 'My Orders'
+    }
 
 ]
 
 const Header = () => {
 
     const totalQuantity = useSelector(state => state.cart.totalQuantity);
-
+    const dispatch = useDispatch();
     const headerRef = useRef(null);
 
     const menuRef = useRef(null);
@@ -41,20 +48,19 @@ const Header = () => {
     const profileActionRef = useRef(null)
 
     const stickyHeaderFunc = () => {
-        window.addEventListener('scroll', () => {
-            if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
-                headerRef.current.classList.add('sticky__header')
-            }
-            else {
-                headerRef.current.classList.remove('sticky__header')
-            }
+        // window.addEventListener('scroll', () => {
+        //     if (document.body.scrollTop > 0 || document.documentElement.scrollTop > 0) {
+        //         headerRef.current.classList.add('sticky__header')
+        //     }
+        //     else {
+        //         headerRef.current.classList.remove('sticky__header')
+        //     }
 
-        });
+        // });
     };
-
-
     const logout = () => {
 
+        dispatch(cartActions.emptyCart({}));
         signOut(auth).then(() => {
             toast.success('Logged out')
             navigate('/home')
@@ -63,7 +69,6 @@ const Header = () => {
         })
 
     }
-
     useEffect(() => {
         stickyHeaderFunc()
 
@@ -109,17 +114,8 @@ const Header = () => {
                             </motion.ul>
                         </div>
                         <div className="nav__icons">
+
                             <div>
-
-                                <span className="fav__icon">
-                                    <i className="ri-heart-line"></i>
-                                    <span className="badge">2</span>
-                                </span>
-
-                            </div>
-                            <div>
-
-
                                 <span className="cart__icon" onClick={navigateToCart}>
                                     <i className="ri-shopping-bag-line"></i>
                                     <span className="badge">{totalQuantity}</span>
@@ -144,16 +140,14 @@ const Header = () => {
                                         </div>
                                     ) : (
                                         <div>
-                                            <span>
-
-                                                <Link to='/signup'>Signup </Link>
-
-                                                <Link to='/login'>login</Link>
 
 
+                                            <Link to='/signup'>Signup </Link>
 
-                                                <Link to='/dashboard'>Dashboard</Link>
-                                            </span>
+                                            <Link to='/login'>login</Link>
+
+                                            <Link to='/dashboard'>Dashboard</Link>
+
                                         </div>
                                     )}
 

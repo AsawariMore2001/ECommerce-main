@@ -1,17 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/cart.css";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Toast } from "reactstrap";
 
 import { motion } from "framer-motion";
 import { cartActions } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { db, storage } from "../firebase.config";
+import { doc, getDoc, collection, deleteDoc } from "firebase/firestore"
+
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const [dynamicCart, setDynamicCart] = useState([]);
+
+  // useEffect(() => {
+  //   async function loadCart() {
+  //     const docRef = doc(db, "users", "YkMgHCCquqfeyUIzplxrjPVpmPb2");
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap.exists()) {
+  //       console.log(docSnap.data().cart);
+  //       setDynamicCart(docSnap.data().cart);
+  //       console.log(dynamicCart)
+  //     }
+  //     else {
+  //       console.log("Not found");
+  //     }
+  //   }
+  //   loadCart();
+  // })
 
   return (
     <Helmet title="Cart">
@@ -74,7 +94,16 @@ const Tr = ({ item }) => {
 
   const deleteProduct = () => {
     dispatch(cartActions.deleteItem(item.id));
+
+    deleteProductFirebase().then(() => {
+      console.log("item removed from cart");
+    });
   };
+
+  const deleteProductFirebase = async () => {
+
+    await deleteDoc(doc(collection(db, "users", "YkMgHCCquqfeyUIzplxrjPVpmPb2", "cart"), item.id));
+  }
   return (
     <tr>
       <td>

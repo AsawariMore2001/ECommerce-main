@@ -9,11 +9,17 @@ import { cartActions } from "../../redux/slices/cartSlice";
 import "../../styles/product-card.css";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import { collection, addDoc, setDoc } from "firebase/firestore";
+import { db, storage } from "../../firebase.config";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { doc, getDoc, getDocs } from 'firebase/firestore';
+import useAuth from '../../custom-hooks/useAuth';
 // import productImg from '../../assets/images/arm-chair-01.jpg'
 
 const ProductCard = ({ item }) => {
   const dispatch = useDispatch();
-  const addToCart = () => {
+  const { currentUser } = useAuth()
+  const addToCart = async () => {
     dispatch(
       cartActions.addItem({
         id: item.id,
@@ -22,9 +28,25 @@ const ProductCard = ({ item }) => {
         imgUrl: item.imgUrl,
       })
     );
+    await addToFirebaseCart(item);
 
     toast.success("Product Added Successfully");
   };
+
+  // add item to firebase cart 
+  const addToFirebaseCart = async () => {
+    try {
+      await setDoc(doc(collection(db, "users", currentUser.uid, "cart"), item.id), {
+        id: item.id,
+        productName: item.productName,
+        price: item.price,
+        imgUrl: item.imgUrl,
+      });
+    }
+    catch (err) {
+      console.log("failed to add item", err);
+    }
+  }
 
   return (
     <Col lg="3" md="4" className="mb-2">

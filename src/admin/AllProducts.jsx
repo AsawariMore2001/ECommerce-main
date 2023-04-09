@@ -3,7 +3,6 @@ import { Container,Row,Col } from "reactstrap";
 import useGetData from "../custom-hooks/useGetData";
 import { db } from "../firebase.config";
 import { doc, deleteDoc } from "firebase/firestore";
-import { async } from "@firebase/util";
 import { toast } from "react-toastify";
 
 const AllProducts=()=>{

@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import { collection, addDoc, setDoc, doc } from "firebase/firestore";
+import { collection, addDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
 import { db, storage } from "../firebase.config";
 import useAuth from '../custom-hooks/useAuth';
 import { toast } from 'react-toastify'
@@ -70,16 +70,26 @@ const Checkout = () => {
     }
   }
 
+  async function emptyCartFirebase() {
+    cartItem.forEach(async (item) => {
+      await deleteDoc(doc(collection(db, "users", currentUser.uid, "cart"), item.id));
+    })
+  }
+
+
   const placeOrder = async () => {
     setLoading(true);
-    await addDoc(collection(db, "orders", currentUser.uid, "myorders"), {
+    await addDoc(collection(db, "neworder", currentUser.uid, "myorders"), {
       ...orderData,
       Items: cartItem,
       TotalAmount: totalAmount,
       TotalQuantity: totalQty
     });
+
+    await emptyCartFirebase();
     dispatch(cartActions.emptyCart({}));
-    
+
+
     setLoading(false);
     toast.success('Order Placed Successfully')
   }
@@ -190,6 +200,7 @@ const Checkout = () => {
         loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Processing Order</h5></Col> :
 
           <Container>
+            <button onClick={emptyCartFirebase}>check</button>
             <Row>
               <Col lg="8">
                 <h6 className="mb-4 fw-bold">Billing Information</h6>

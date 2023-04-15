@@ -10,28 +10,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { db, storage } from "../firebase.config";
-import { doc, getDoc, collection, deleteDoc } from "firebase/firestore"
+import { doc, getDoc, collection, deleteDoc, getDocs } from "firebase/firestore"
+import useAuth from "../custom-hooks/useAuth"
+
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const [dynamicCart, setDynamicCart] = useState([]);
+  const { currentUser } = useAuth();
+  const dispatch = useDispatch();
+
 
   // useEffect(() => {
   //   async function loadCart() {
-  //     const docRef = doc(db, "users", "YkMgHCCquqfeyUIzplxrjPVpmPb2");
-  //     const docSnap = await getDoc(docRef);
-  //     if (docSnap.exists()) {
-  //       console.log(docSnap.data().cart);
-  //       setDynamicCart(docSnap.data().cart);
-  //       console.log(dynamicCart)
-  //     }
-  //     else {
-  //       console.log("Not found");
-  //     }
+  //     const querySnapshot = await getDocs(collection(db, "users", currentUser.uid, "cart"));
+  //     querySnapshot.forEach((doc) => {
+
+  //       dispatch(cartActions.addItem({
+  //         ...doc.data()
+  //       }));
+
+  //     });
   //   }
   //   loadCart();
-  // })
+  // }, [])
 
   return (
     <Helmet title="Cart">
@@ -91,6 +94,7 @@ const Cart = () => {
 
 const Tr = ({ item }) => {
   const dispatch = useDispatch();
+  const { currentUser } = useAuth();
 
   const deleteProduct = () => {
     dispatch(cartActions.deleteItem(item.id));
@@ -102,7 +106,7 @@ const Tr = ({ item }) => {
 
   const deleteProductFirebase = async () => {
 
-    await deleteDoc(doc(collection(db, "users", "YkMgHCCquqfeyUIzplxrjPVpmPb2", "cart"), item.id));
+    await deleteDoc(doc(collection(db, "users", currentUser.uid, "cart"), item.id));
   }
   return (
     <tr>

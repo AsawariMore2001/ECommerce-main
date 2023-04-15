@@ -59,6 +59,9 @@ const Signup = () => {
         email,
         photoURL: ''
       });
+      await setDoc(doc(db, "neworder", user.uid), {
+        name: username
+      })
       setLoading(false)
       toast.success('Account Created ')
       navigate('/login')

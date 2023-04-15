@@ -57,20 +57,6 @@ const cartSlice = createSlice({
                     quantity), 0
             );
         },
-        loadCart: (state, action) => {
-
-            const newItem = action.payload;
-            cartActions.addItem(action.payload);
-            // state.cartItems.push({
-            //     id: newItem.id,
-            //     productName: newItem.productName,
-            //     imgUrl: newItem.imgUrl,
-            //     price: newItem.price,
-            //     quantity: 1,
-            //     totalPrice: newItem.price
-            // });
-            console.log("cart load ", "item added");
-        },
         emptyCart: (state, action) => {
             state.cartItems = []
             state.totalAmount = 0

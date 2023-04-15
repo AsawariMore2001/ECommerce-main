@@ -36,6 +36,7 @@ const ProductCard = ({ item }) => {
   // add item to firebase cart 
   const addToFirebaseCart = async () => {
     try {
+      console.log(currentUser.uid, item.id, "add item");
       await setDoc(doc(collection(db, "users", currentUser.uid, "cart"), item.id), {
         id: item.id,
         productName: item.productName,

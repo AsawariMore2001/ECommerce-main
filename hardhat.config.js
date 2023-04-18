@@ -15,11 +15,11 @@ module.exports = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
-      chainId: 1337
+      chainId: 11155111
     },
-    goerli: {
-      url: "ALCHMY_APP_API_URL",
-      accounts: [ "PRIVATE_KEY_ACCOUNT" ]
+    sepolia: {
+      url: "REACT_APP_ALCHEMY_API_URL",
+      accounts: [ "REACT_APP_PRIVATE_KEY" ]
     }
   },
   solidity: {

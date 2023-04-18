@@ -96,7 +96,7 @@ const MyOrders = () => {
                         <tbody>
                             {
                                 ordersData.map((item, index) => (
-                                    <Tr item={item} key={index} />
+                                    <Tr outer_item={item} key={index} />
                                 ))
                             }
                         </tbody>
@@ -108,18 +108,18 @@ const MyOrders = () => {
     )
 };
 
-const Tr = ({ item }) => {
+const Tr = ({ outer_item }) => {
 
     return (<>
 
         {
-            item.Items.map((item1, index) => {
-                <Trr item={item1} key={index} />
+            outer_item.Items.map((item1, index) => {
+               return <Trr item={item1} key={index} />
             })
         }
         <tr>
-            <td>TotalQuantity: {item.TotalQuantity}</td>
-            <td>TotalAmount: {item.TotalAmount}</td>
+            <td>TotalQuantity: {outer_item.TotalQuantity}</td>
+            <td>TotalAmount: {outer_item.TotalAmount}</td>
 
         </tr>
     </>
@@ -129,10 +129,9 @@ const Tr = ({ item }) => {
 const Trr = ({ item }) => {
     return (<tr>
         <td>
-            {/* <img src={item.imgUrl} alt="" /> */}
-            hello
+            <img src={item.imgUrl} alt="" />
         </td>
-        {/* <td>{item.productName}</td>
+        <td>{item.productName}</td>
         <td>${item.price}</td>
         <td>{item.quantity}px</td>
         <td>
@@ -140,7 +139,7 @@ const Trr = ({ item }) => {
                 whileTap={{ scale: 1.2 }}
                 className="ri-delete-bin-5-line"
             ></motion.i>{" "}
-        </td> */}
+        </td>
 
     </tr>)
 }

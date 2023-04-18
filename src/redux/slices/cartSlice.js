@@ -1,5 +1,8 @@
 
 import { createSlice } from '@reduxjs/toolkit'
+import { doc, getDoc } from 'firebase/firestore';
+import { db, storage } from "../../firebase.config";
+import { List } from 'reactstrap';
 
 const initialState = {
     cartItems: [],
@@ -34,26 +37,33 @@ const cartSlice = createSlice({
             }
             state.totalAmount = state.cartItems.reduce(
                 (total, item) => total + Number(item.price) * Number(item.
-                    quantity),0
-            );  
-                      
+                    quantity), 0
+            );
+
+
+
         },
         deleteItem: (state, action) => {
             const id = action.payload;
             const existingItem = state.cartItems.find(item => item.id === id)
-          
+
             if (existingItem) {
-              state.cartItems = state.cartItems.filter(item => item.id !== id);
-              state.totalQuantity = state.totalQuantity - existingItem.quantity;
+                state.cartItems = state.cartItems.filter(item => item.id !== id);
+                state.totalQuantity = state.totalQuantity - existingItem.quantity;
             }
-          
+
             state.totalAmount = state.cartItems.reduce(
                 (total, item) => total + Number(item.price) * Number(item.
-                    quantity),0
-            );  
-          },
-          
-    },    
+                    quantity), 0
+            );
+        },
+        emptyCart: (state, action) => {
+            state.cartItems = []
+            state.totalAmount = 0
+            state.totalQuantity = 0
+        }
+
+    },
 });
 
 export const cartActions = cartSlice.actions

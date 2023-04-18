@@ -1,17 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/cart.css";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Toast } from "reactstrap";
 
 import { motion } from "framer-motion";
 import { cartActions } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 
+import { db, storage } from "../firebase.config";
+import { doc, getDoc, collection, deleteDoc, getDocs } from "firebase/firestore"
+import useAuth from "../custom-hooks/useAuth"
+
+
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
+  const [dynamicCart, setDynamicCart] = useState([]);
+  const { currentUser } = useAuth();
+  const dispatch = useDispatch();
+
+
+  // useEffect(() => {
+  //   async function loadCart() {
+  //     const querySnapshot = await getDocs(collection(db, "users", currentUser.uid, "cart"));
+  //     querySnapshot.forEach((doc) => {
+
+  //       dispatch(cartActions.addItem({
+  //         ...doc.data()
+  //       }));
+
+  //     });
+  //   }
+  //   loadCart();
+  // }, [])
 
   return (
     <Helmet title="Cart">
@@ -71,10 +94,20 @@ const Cart = () => {
 
 const Tr = ({ item }) => {
   const dispatch = useDispatch();
+  const { currentUser } = useAuth();
 
   const deleteProduct = () => {
     dispatch(cartActions.deleteItem(item.id));
+
+    deleteProductFirebase().then(() => {
+      console.log("item removed from cart");
+    });
   };
+
+  const deleteProductFirebase = async () => {
+
+    await deleteDoc(doc(collection(db, "users", currentUser.uid, "cart"), item.id));
+  }
   return (
     <tr>
       <td>

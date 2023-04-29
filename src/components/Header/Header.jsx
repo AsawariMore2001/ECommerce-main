@@ -32,6 +32,10 @@ const nav__links = [
     {
         path: 'myorders',
         display: 'My Orders'
+    },
+    {
+        path:'mywarranty',
+        display:'My Warranty'
     }
 
 ]

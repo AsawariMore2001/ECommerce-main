@@ -1,15 +1,13 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import MarketplaceJSON from "../Marketplace.json";
 import axios from "axios";
 import { useState } from "react";
-import NFTTile from "./NFTTile";
-import { color } from "framer-motion";
+import NFTTile from "../components/NFTTile";
 
-export default function Profile() {
+export default function MyWarranty() {
   const [data, updateData] = useState([]);
   const [dataFetched, updateFetched] = useState(false);
   const [address, updateAddress] = useState("0x");
-  const [totalPrice, updateTotalPrice] = useState("0");
 
   async function getNFTData(tokenId) {
     const ethers = require("ethers");
@@ -84,7 +82,7 @@ export default function Profile() {
         })}
       </div>
       <div className="mt-10 text-xl">
-        {data.length == 0
+        {data.length === 0
           ? "Oops, No NFT data to display (Are you logged in?)"
           : ""}
       </div>

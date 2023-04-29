@@ -75,3 +75,42 @@ section{
     padding: 40px 0px;
   }
 }
+
+.nft-tile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border: 2px solid #41abe9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.nft-image {
+  width: 200px;
+  height: 200px;
+  margin-right: 20px;
+}
+
+.nft-details {
+  flex: 1;
+}
+
+.nft-details h2 {
+  font-size: 24px;
+  margin: 0 0 8px 0;
+  color: #000;
+  text-align: left;
+}
+
+.nft-details p {
+  font-size: 16px;
+  margin: 0;
+  text-align: left;
+}
+
+h2 .red-text {
+  color: red;
+}

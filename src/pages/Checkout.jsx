@@ -96,10 +96,10 @@ const Checkout = () => {
   async function connectWebsite() {
     try {
       const chainId = await window.ethereum.request({ method: "eth_chainId" });
-      if (chainId !== "0x5") {
+      if (chainId !== "0xaa36a7") {
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x5" }],
+          params: [{ chainId: "0xaa36a7" }],
         });
       }
       const accounts = await window.ethereum.request({
@@ -122,10 +122,10 @@ const Checkout = () => {
           const chainId = await window.ethereum.request({
             method: "eth_chainId",
           });
-          if (chainId !== "0x5") {
+          if (chainId !== "0xaa36a7") {
             await window.ethereum.request({
               method: "wallet_switchEthereumChain",
-              params: [{ chainId: "0x5" }],
+              params: [{ chainId: "0xaa36a7" }],
             });
           }
           const accounts = await window.ethereum.request({

@@ -15,13 +15,22 @@ const admin__nav=[
         path:'/dashboard/add-products'
     },
     {
-        display:'Orders',
+        display:'Placed Orders',
         path:'/dashboard/orders'
     },
     {
         display:'Users',
         path:'/dashboard/users'
+    },
+    {
+        display:'Approve Orders',
+        path:'/dashboard/approve-orders'
+    },
+    {
+        display:'All Products',
+        path:'/dashboard/all-products'
     }
+
 ]
 
 const AdminNav =()=>{

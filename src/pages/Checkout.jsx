@@ -32,7 +32,13 @@ const Checkout = () => {
   })
 
   function handleSubmit() {
-    console.log("submit called");
+  
+    // if (orderData.Name.trim() === "" || orderData.Email.trim() === "" || orderData.PhoneNo.trim() === "" || orderData.Address.trim() === "") {
+    //   // If any of the fields is empty, do not proceed with the order and show an error message
+    //   alert("Please fill in all the fields");
+    //   return;
+    // }
+
     placeOrder();
     setOrderData((prev) => {
       return {
@@ -160,13 +166,13 @@ const Checkout = () => {
                 <h6 className="mb-4 fw-bold">Billing Information</h6>
                 <form className="billing__form" onSubmit={placeOrder}>
 
-                  <input type="text" placeholder="Enter Your Name" value={orderData.Name} name="Name" onChange={(e) => handleChange(e)} />
+                  <input type="text" placeholder="Enter Your Name" value={orderData.Name} name="Name" onChange={(e) => handleChange(e)} required/>
 
-                  <input type="email" placeholder="Enter Your Email" value={orderData.Email} name="Email" onChange={(e) => handleChange(e)} />
+                  <input type="email" placeholder="Enter Your Email" value={orderData.Email} name="Email" onChange={(e) => handleChange(e)} required />
 
-                  <input type="number" placeholder="Phone number" value={orderData.PhoneNo} name="PhoneNo" onChange={(e) => handleChange(e)} />
+                  <input type="number" placeholder="Phone number" value={orderData.PhoneNo} name="PhoneNo" onChange={(e) => handleChange(e)} required />
 
-                  <input type="text" placeholder="Address" value={orderData.Address} name="Address" onChange={(e) => handleChange(e)} />
+                  <input type="text" placeholder="Address" value={orderData.Address} name="Address" onChange={(e) => handleChange(e)} required/>
 
                 </form>
               </Col>

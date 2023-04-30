@@ -27,9 +27,9 @@ const Dashboard = () => {
         signer
       );
 
-      let add = "0xfb8d163B0B6307905aE1615917383Fa2AA191F74";
+      let add = "0x517CbE9762a4C53e6923B33FdFC7F1Dc2771941f";
       let metadataURL =
-        "https://gateway.pinata.cloud/ipfs/QmNQpSEU3yn1At5EfbGXRUvrpWE2pU6fWmDrkG7x7SNEnB";
+        "https://gateway.pinata.cloud/ipfs/QmevmzmhwxcSaLrcwxMcCXohfq5enCQV7qsFc7dWoWV9h1";
       //actually create the NFT
       let transaction = await contract.createToken(add, metadataURL);
       await transaction.wait();

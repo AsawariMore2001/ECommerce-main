@@ -146,52 +146,6 @@ const Checkout = () => {
     });
   }, []);
 
-  // const [connected, toggleConnect] = useState(false);
-  // const location = useLocation();
-  // const [currAddress, updateAddress] = useState("0x");
-
-  // async function getAddress() {
-  //   const ethers = require("ethers");
-  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //   try {
-  //     const signer = provider.getSigner();
-  //     const addr = await signer.getAddress();
-  //     updateAddress(addr);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
-  // async function connectWebsite() {
-  //   const chainId = await window.ethereum.request({ method: "eth_chainId" });
-  //   if (chainId !== "0x5") {
-  //     //alert('Incorrect network! Switch your metamask network to Goerli');
-  //     await window.ethereum.request({
-  //       method: "wallet_switchEthereumChain",
-  //       params: [{ chainId: "0x5" }],
-  //     });
-  //   }
-  //   await window.ethereum
-  //     .request({ method: "eth_requestAccounts" })
-  //     .then(() => {
-  //       console.log("Inside connect website");
-  //       getAddress();
-  //       // window.location.replace(location.pathname);
-  //     });
-  // }
-
-  // useEffect(() => {
-  //   let val = window.ethereum.isConnected();
-  //   if (val) {
-  //     console.log("Inside use effect")
-  //     getAddress();
-  //     toggleConnect(val);
-  //   }
-
-  //   window.ethereum.on("accountsChanged", function (accounts) {
-  //     // window.location.replace(location.pathname);
-  //   });
-  // });
 
   return (
     <Helmet title="Checkout">

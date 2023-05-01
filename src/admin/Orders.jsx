@@ -17,53 +17,32 @@ import { motion } from "framer-motion";
 import useGetDataNew from "../custom-hooks/useGetDataNew";
 import useAuth from "../custom-hooks/useAuth"
 
-const MyOrders = () => {
+const Orders = () => {
 
     const [ordersData, setOrdersData] = useState([]);
     const [loading, setLoading] = useState(false);
     const { currentUser } = useAuth()
     // const collectionRef = doc(db, 'orders', currentUser.uid)
     // const { data: products, loading } = useGetDataNew(collectionRef);
-    
+
 
     useEffect(() => {
 
+        const getData = async () => {
 
-
-        const getData = async (uid) => {
-
-            // await onSnapshot(collection(db, 'orders', currentUser.uid, "myorders"), (snapshot) => {
-            //     setOrdersData(snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-            // })
             setLoading(true)
-            const auth = getAuth();
 
             try {
 
-                const snapShot = await getDocs(collection(db, 'neworder', auth.currentUser.uid, "myorders"));
-                // setOrdersData([]);
-                // const temp = []
-                // snapShot.forEach((doc) => {
-                //     temp.push({ ...doc.data(), id: doc.id });
 
-                // })
-                // setOrdersData(temp);
+                const snapShot = await getDocs(collection(db, 'neworder'));
                 setOrdersData(snapShot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
 
             } catch (error) {
                 console.log(error)
             }
-
-
-
-            // console.log(currentUser.uid)
-            // const snapShot = await getDocs(collection(db, 'neworder', currentUser.uid, "myorders"));
-            // setOrdersData(snapShot.docs.map(doc=>({...doc.data(),id:doc.id})));
-
-
             setLoading(false)
 
-            // setOrdersData(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
         }
         getData();
 
@@ -76,11 +55,11 @@ const MyOrders = () => {
                     <table className='table border'>
                         <thead>
                             <tr>
-                                <th>Image</th>
-                                <th>Product Name</th>
+                                <th>Order Id</th>
+                                <th>Customer Name</th>
                                 <th>Price</th>
                                 <th>Qty</th>
-                                <th>Warranty</th>
+                                <th>Warranty Status</th>
                             </tr>
                         </thead>
 
@@ -101,17 +80,31 @@ const MyOrders = () => {
 
 const Tr = ({ outer_item }) => {
 
+    const [outerItemOrdersData, setOuterItemOrdersData] = useState([])
+
+    useEffect(() => {
+
+        const getData = async () => {
+            try {
+                const snapShot = await getDocs(collection(db, 'neworder', outer_item.id, "myorders"));
+                setOuterItemOrdersData(snapShot.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+                console.log(outerItemOrdersData);
+            } catch (error) {
+                console.log(error)
+            }
+
+
+        }
+        getData();
+
+    }, [])
+
+
     return (<>
 
-        {
-            outer_item.Items.map((item1, index) => {
-                return <Trr item={item1} key={index} />
-            })
-        }
         <tr>
-            <td>TotalQuantity: {outer_item.TotalQuantity}</td>
-            <td>TotalAmount: {outer_item.TotalAmount}</td>
-
+            <td>{outer_item.id}</td>
+            <td>{outer_item.name}</td>
         </tr>
     </>
     );
@@ -136,4 +129,4 @@ const Trr = ({ item }) => {
 }
 
 
-export default MyOrders;
+export default Orders;

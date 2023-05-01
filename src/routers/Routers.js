@@ -15,6 +15,7 @@ import Users from '../admin/Users'
 import MyOrders from '../pages/MyOrders'
 import MyWarranty from '../pages/MyWarranty'
 import ApproveOrders from '../admin/ApproveOrders'
+import Orders from '../admin/Orders'
 
 const Routers = () => {
     return (
@@ -37,9 +38,10 @@ const Routers = () => {
                 <Route path="dashboard/all-products" element={<AllProducts />} />
                 <Route path="dashboard/add-products" element={<AddProducts />} />
                 <Route path="dashboard/users" element={<Users />} />
-                <Route path="dashboard/approve-orders" element={<ApproveOrders/>}/>
-                <Route path="dashboard/all-products" element={<AllProducts/>}/>;
-                <Route path="mywarranty" element={<MyWarranty/>}/>
+                <Route path="dashboard/approve-orders" element={<ApproveOrders />} />
+                <Route path="dashboard/orders" element={<Orders />} />
+                <Route path="dashboard/all-products" element={<AllProducts />} />;
+                <Route path="mywarranty" element={<MyWarranty />} />
 
             </Route>
 

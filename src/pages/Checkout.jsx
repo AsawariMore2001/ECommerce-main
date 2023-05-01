@@ -32,23 +32,34 @@ const Checkout = () => {
   })
 
   function handleSubmit() {
-  
-    // if (orderData.Name.trim() === "" || orderData.Email.trim() === "" || orderData.PhoneNo.trim() === "" || orderData.Address.trim() === "") {
-    //   // If any of the fields is empty, do not proceed with the order and show an error message
-    //   alert("Please fill in all the fields");
-    //   return;
-    // }
 
-    placeOrder();
-    setOrderData((prev) => {
-      return {
-        Name: "",
-        Email: "",
-        PhoneNo: "",
-        Address: "",
 
+    if (connected) {
+
+      if (orderData.Name.trim() === "" || orderData.Email.trim() === "" || orderData.PhoneNo.trim() === "" || orderData.Address.trim() === "") {
+        // If any of the fields is empty, do not proceed with the order and show an error message
+        alert("Please fill in all the fields");
+        return;
       }
-    })
+
+
+      placeOrder();
+      setOrderData((prev) => {
+        return {
+          Name: "",
+          Email: "",
+          PhoneNo: "",
+          Address: "",
+
+        }
+      })
+
+    }
+    else {
+      connectWebsite();
+    }
+
+
   }
 
   function handleChange(event) {
@@ -84,12 +95,14 @@ const Checkout = () => {
 
 
   const placeOrder = async () => {
+
     setLoading(true);
     await addDoc(collection(db, "neworder", currentUser.uid, "myorders"), {
       ...orderData,
       Items: cartItem,
       TotalAmount: totalAmount,
-      TotalQuantity: totalQty
+      TotalQuantity: totalQty,
+      OrderStatus: "pending"
     });
 
     await emptyCartFirebase();
@@ -166,13 +179,13 @@ const Checkout = () => {
                 <h6 className="mb-4 fw-bold">Billing Information</h6>
                 <form className="billing__form" onSubmit={placeOrder}>
 
-                  <input type="text" placeholder="Enter Your Name" value={orderData.Name} name="Name" onChange={(e) => handleChange(e)} required/>
+                  <input type="text" placeholder="Enter Your Name" value={orderData.Name} name="Name" onChange={(e) => handleChange(e)} required />
 
                   <input type="email" placeholder="Enter Your Email" value={orderData.Email} name="Email" onChange={(e) => handleChange(e)} required />
 
                   <input type="number" placeholder="Phone number" value={orderData.PhoneNo} name="PhoneNo" onChange={(e) => handleChange(e)} required />
 
-                  <input type="text" placeholder="Address" value={orderData.Address} name="Address" onChange={(e) => handleChange(e)} required/>
+                  <input type="text" placeholder="Address" value={orderData.Address} name="Address" onChange={(e) => handleChange(e)} required />
 
                 </form>
               </Col>

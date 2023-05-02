@@ -15,10 +15,6 @@ const admin__nav = [
         path: '/dashboard/add-products'
     },
     {
-        display: 'Placed Orders',
-        path: '/dashboard/orders'
-    },
-    {
         display: 'Users',
         path: '/dashboard/users'
     },

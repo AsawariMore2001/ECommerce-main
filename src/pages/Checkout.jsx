@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Form, FormGroup } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import "../styles/checkout.css";
@@ -8,8 +8,8 @@ import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
-import { collection, addDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
-import { db, storage } from "../firebase.config";
+import { collection, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
 import useAuth from '../custom-hooks/useAuth';
 import { toast } from 'react-toastify'
 import { cartActions } from "../redux/slices/cartSlice";

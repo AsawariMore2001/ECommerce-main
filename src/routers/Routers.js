@@ -16,6 +16,7 @@ import MyOrders from '../pages/MyOrders'
 import MyWarranty from '../pages/MyWarranty'
 import ApproveOrders from '../admin/ApproveOrders'
 import Orders from '../admin/Orders'
+import ProductWarranty from '../pages/ProductWarranty'
 
 const Routers = () => {
     return (
@@ -23,6 +24,7 @@ const Routers = () => {
             <Route path='/' element={<Navigate to='/home' />} />
             <Route path='home' element={<Home />} />
             <Route path='shop' element={<Shop />} />
+            <Route path='ProductWarranty' element={<ProductWarranty/>}/>
             <Route path='shop/:id' element={<ProductDetails />} />
             <Route path='signup' element={<Signup />} />
             <Route path='login' element={<Login />} />

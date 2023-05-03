@@ -32,7 +32,7 @@ const ProductWarranty= () => {
                         <h2>Sony Camera</h2>
                         
                         <div className="d-flex align-items-center gap-5 mb-3">
-                        <span className="product__price"><br/>Price: $1299</span>
+                        <span className="product__price"><br/>Price: ₹1299</span>
                         <span><br/>Category: camera</span>
                         </div>
                             <h5>Warranty period:  1 Year</h5>

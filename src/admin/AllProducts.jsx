@@ -37,7 +37,7 @@ const AllProducts=()=>{
                                 <td><img src={item.imgUrl} alt="" /></td>
                                 <td>{item.productName}</td>
                                 <td>{item.category}</td>
-                                <td>${item.price}</td>
+                                <td>₹{item.price}</td>
                                 <td><button 
                                 onClick={()=>{deleteProduct(item.id)
                                 }}

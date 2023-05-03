@@ -182,7 +182,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
 //             <img src={item.imgUrl} alt="" />
 //         </td>
 //         <td>{item.productName}</td>
-//         <td>${item.price}</td>
+//         <td>₹{item.price}</td>
 //         <td>{item.quantity}px</td>
 //         <td>
 //             <motion.i

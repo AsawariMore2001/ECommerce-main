@@ -15,7 +15,7 @@ const Dashboard = () => {
           <Col className="lg-3">
             <div className="revenue__box">
               <h5>Total sales</h5>
-              <span>$7890</span>
+              <span>₹7890</span>
             </div>
           </Col>
           <Col className="lg-3">

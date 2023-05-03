@@ -27,7 +27,7 @@ const AddProducts = () => {
 
       const storageRef = ref(
         storage,
-        `productImages/${Date.now() + enterProductImg.name}`
+        `productImages/₹{Date.now() + enterProductImg.name}`
       );
       const uploadTask = uploadBytesResumable(storageRef, enterProductImg);
 
@@ -129,7 +129,7 @@ const AddProducts = () => {
                       <span>Price</span>
                       <input
                         type="number"
-                        placeholder="$100"
+                        placeholder="₹100"
                         value={enterPrice}
                         onChange={(e) => setEnterPrice(e.target.value)}
                         required

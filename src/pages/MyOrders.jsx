@@ -86,7 +86,7 @@ const Trr = ({ item }) => {
         </center>
         </td>
         <td><center>{item.productName}</center></td>
-        <td><center>${item.price}</center></td>
+        <td><center>₹{item.price}</center></td>
         <td><center>{item.quantity} </center></td>
         <motion.td whileHover={{ scale: 1.2 }}><center>
             <Link to="/ProductWarranty">

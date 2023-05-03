@@ -120,7 +120,7 @@ const ProductDetails = () => {
                 </div>
 
                 <div className="d-flex align-items-center gap-5 mb-3">
-                  <span className="product__price">${price}</span>
+                  <span className="product__price">₹{price}</span>
                   {<span>Category: {category}</span>}
                 </div>
                 <p className="mt-3">{shortDesc}</p>
@@ -144,13 +144,13 @@ const ProductDetails = () => {
             <Col lg="12">
               <div className="tab__wrapper d-flex align-items-center gap-5">
                 <h6
-                  className={`$'{tab==='desc'?'active__tab' : ''}`}
+                  className={`₹'{tab==='desc'?'active__tab' : ''}`}
                   onClick={() => setTab("desc")}
                 >
                   Description
                 </h6>
                 <h6
-                  className={`$'{tab==='rev'?'active__tab' : ''}`}
+                  className={`₹'{tab==='rev'?'active__tab' : ''}`}
                   onClick={() => setTab("rev")}
                 ></h6>
               </div>

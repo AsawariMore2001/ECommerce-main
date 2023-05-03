@@ -9,13 +9,16 @@ import { storage } from '../firebase.config';
 import { toast } from 'react-toastify'
 import { db } from '../firebase.config';
 
-import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, query } from 'firebase/firestore';
+import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, query, addDoc } from 'firebase/firestore';
 import '../styles/myorders.css'
 import { async } from '@firebase/util';
 import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import useGetDataNew from "../custom-hooks/useGetDataNew";
 import useAuth from "../custom-hooks/useAuth"
+import Marketplace from "../Marketplace.json";
+import { uploadJSONToIPFS } from "../pinata"
+
 
 const Orders = () => {
 
@@ -33,7 +36,7 @@ const Orders = () => {
         //     return { ...prev, [newDoc.id]: { ...newDoc.data(), "doc_id": doc.id, "customer_name": doc.data().name, "processing": false } };
         // })
         setOrdersData((prev) => {
-            return { ...prev, [id]: { ...data, "processing": isProcessing, "OrderStatus": isApproved } };
+            return { ...prev, [id]: { ...data, "processing": isProcessing, "OrderStatus": isApproved ? "Approved" : "Pending" } };
         })
 
 
@@ -129,22 +132,130 @@ const Tr = ({ outer_item, data, updateStatus }) => {
     //     getData();
 
     // }, [])
+
+
+    const ethers = require("ethers");
+    const [message, updateMessage] = useState("");
+
+    async function listNFT(ipfsURL) {
+
+        //Upload data to IPFS
+        try {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+
+            //Pull the deployed contract instance
+            let contract = new ethers.Contract(
+                Marketplace.address,
+                Marketplace.abi,
+                signer
+            );
+
+            let add = "0x517CbE9762a4C53e6923B33FdFC7F1Dc2771941f";
+            let metadataURL = ipfsURL;
+
+            //actually create the NFT
+            // let transaction = await contract.createToken(add, metadataURL);
+            // const res = await transaction.wait();
+            // let transaction = await contract.getLatestIdToListedToken();
+            // let transaction = await contract.getCurrentToken();
+            let transaction = await contract.getMyNFTs();
+
+            console.log(transaction);
+
+
+            alert("Successfully listed your NFT!");
+            updateMessage("");
+        } catch (e) {
+            console.log(e);
+            alert("Upload error" + e);
+        }
+    }
+
+
     const viewNFT = () => {
         alert("view nft!");
     }
+
+    const uploadProductDataToIpfs = async (id, item) => {
+
+        let uploadJson = {};
+        let date = new Date();
+        uploadJson['timestamp'] = date.toUTCString();
+        uploadJson['customer'] = data.customer_name;
+
+        uploadJson = {
+            ...uploadJson,
+            ...item
+        }
+
+        console.log("uploading...", uploadJson);
+        const ipfsResponse = await uploadJSONToIPFS(uploadJson);
+        if (ipfsResponse.success) {
+            const docRef = collection(db, "warranty", data.doc_id, id);
+            await addDoc(docRef, {
+                ...uploadJson,
+                ipfsUrl: ipfsResponse.pinataURL,
+            });
+
+            return ipfsResponse.pinataURL;
+        } else {
+            console.log(ipfsResponse.message);
+
+            return null;
+        }
+
+
+
+
+    }
+
+
+    const processOrder = async (id, data) => {
+
+        data.Items.forEach(async (product) => {
+
+            // const ipfsURL = await uploadProductDataToIpfs(id, product);
+
+            await listNFT("ipfsURL");
+            // if (ipfsURL) {
+
+
+            // }
+            // else {
+            //     // console.log("Failed to upload product data to ipfs");
+            // }
+
+
+
+        })
+
+
+        // If IPFS upload is successful, save the product information to the database using addDoc()
+
+    }
+
+
 
     const mintNFT = async (id, data) => {
 
         if (data.OrderStatus === "Pending") {
 
-            updateStatus(outer_item, data, true, false);
+            // updateStatus(outer_item, data, true, false);
 
-            const orderRef = doc(db, 'neworder', data.doc_id, "myorders", id)
-            await updateDoc(orderRef, {
-                OrderStatus: "Approved"
-            });
+            await processOrder(id, data);
+            // console.log("mint", data.Items[0], id);
 
-            updateStatus(outer_item, data, false, true);
+            // await listNFT();
+
+            // const orderRef = doc(db, 'neworder', data.doc_id, "myorders", id)
+            // await updateDoc(orderRef, {
+            //     OrderStatus: "Approved"
+            // });
+
+
+
+            // updateStatus(outer_item, data, false, true);
 
         }
         else if (data.OrderStatus === "Approved") {
@@ -164,7 +275,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
                     <td>{data.customer_name}</td>
                     <td>{data.TotalAmount}</td>
                     <td>{data.TotalQuantity}</td>
-                    <td><button onClick={() => { mintNFT(outer_item, data) }}>{data.OrderStatus == "Approved" ? "View NFT" : "Mint NFT"}</button></td>
+                    <td><button onClick={() => { mintNFT(outer_item, data) }}>{data.OrderStatus === "Approved" ? "View NFT" : "Mint NFT"}</button></td>
                 </tr>
         }
 

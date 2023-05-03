@@ -7,7 +7,7 @@ import { Container, Row, Col, Toast } from "reactstrap";
 import { motion } from "framer-motion";
 import { cartActions } from "../redux/slices/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { db, storage } from "../firebase.config";
 import { doc, getDoc, collection, deleteDoc, getDocs } from "firebase/firestore"
@@ -15,6 +15,7 @@ import useAuth from "../custom-hooks/useAuth"
 
 
 const Cart = () => {
+  const navigate = useNavigate()
   const cartItems = useSelector((state) => state.cart.cartItems);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const [dynamicCart, setDynamicCart] = useState([]);
@@ -22,19 +23,13 @@ const Cart = () => {
   const dispatch = useDispatch();
 
 
-  // useEffect(() => {
-  //   async function loadCart() {
-  //     const querySnapshot = await getDocs(collection(db, "users", currentUser.uid, "cart"));
-  //     querySnapshot.forEach((doc) => {
-
-  //       dispatch(cartActions.addItem({
-  //         ...doc.data()
-  //       }));
-
-  //     });
-  //   }
-  //   loadCart();
-  // }, [])
+  async function validate_checkout(){
+    if(totalAmount===0){
+      alert("No product to checkout!")
+      return
+    }
+    navigate("/checkout")
+  }
 
   return (
     <Helmet title="Cart">
@@ -70,14 +65,14 @@ const Cart = () => {
                 <h6 className="d-flex align-items-center justify-content-betweeen">
                   Subtotal
                 </h6>
-                <span className="fs-4 fw-bold">${totalAmount}</span>
+                <span className="fs-4 fw-bold">₹{totalAmount}</span>
               </div>
               <p className="fs-6 mt-2">
                 taxes and shipping will calculate in checkout
               </p>
               <div>
-                <button className="buy__btn w-100 ">
-                  <Link to="/checkout">Checkout</Link>
+                <button onClick={validate_checkout} className="buy__btn w-100 ">
+                  Checkout
                 </button>
 
                 <button className="buy__btn w-100 mt-3">
@@ -114,7 +109,7 @@ const Tr = ({ item }) => {
         <img src={item.imgUrl} alt="" />
       </td>
       <td>{item.productName}</td>
-      <td>${item.price}</td>
+      <td>₹{item.price}</td>
       <td>{item.quantity}px</td>
       <td>
         <motion.i

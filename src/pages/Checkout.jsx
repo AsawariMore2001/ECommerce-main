@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Row, Col, Form, FormGroup } from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import "../styles/checkout.css";
@@ -7,13 +7,14 @@ import { useDispatch } from "react-redux";
 import { ethers } from "ethers";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
-import { collection, addDoc, setDoc, doc, deleteDoc } from "firebase/firestore";
-import { db, storage } from "../firebase.config";
+import { useLocation, useNavigate } from "react-router";
+import { collection, addDoc, doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
 import useAuth from '../custom-hooks/useAuth';
 import { toast } from 'react-toastify'
 import { cartActions } from "../redux/slices/cartSlice";
 const Checkout = () => {
+  const navigate=useNavigate()
   const totalQty = useSelector((state) => state.cart.totalQuantity);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItem = useSelector((state) => state.cart.cartItems)
@@ -31,6 +32,54 @@ const Checkout = () => {
     Address: "",
   })
 
+  const loadScript=(src)=>{
+    return new Promise((resolve)=>{
+      const script = document.createElement('script')
+      script.src = src
+      script.onload = () =>{
+        resolve(true)
+      }
+
+      script.onerror=()=>{
+        resolve(false)
+      }
+
+      document.body.appendChild(script)
+    })
+  }
+
+  const displayRazorpay = async (amount) => {
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
+
+    if(!res){
+      alert('You are offline... Failed to load Razorpay SDK')
+      return
+    }
+
+    const options = {
+      key: "rzp_test_dOROgQ7rxUA8ia",
+      currency: "INR",
+      amount: amount * 100,
+      name: "Multimart",
+      description: "Thanks for shopping",
+      image: '',
+
+      handler: function(response){
+        if(response.razorpay_payment_id){
+          placeOrder()
+          navigate("/")
+        }
+      },
+      prefill:{
+        name: "Multimart"
+      }
+    };
+
+    const paymentObject = new window.Razorpay(options)
+    paymentObject.open()
+
+  }
+
   function handleSubmit() {
 
 
@@ -38,12 +87,12 @@ const Checkout = () => {
 
       if (orderData.Name.trim() === "" || orderData.Email.trim() === "" || orderData.PhoneNo.trim() === "" || orderData.Address.trim() === "") {
         // If any of the fields is empty, do not proceed with the order and show an error message
-        alert("Please fill in all the fields");
+        alert("Please fill all the fields");
         return;
       }
 
 
-      placeOrder();
+      displayRazorpay(totalAmount)
       setOrderData((prev) => {
         return {
           Name: "",
@@ -195,7 +244,7 @@ const Checkout = () => {
                     Total Qty: <span>{totalQty} items</span>
                   </h6>
                   <h6>
-                    Subtotal: <span>${totalAmount}</span>
+                    Subtotal: <span>₹{totalAmount}</span>
                   </h6>
                   <h6>
                     <span>

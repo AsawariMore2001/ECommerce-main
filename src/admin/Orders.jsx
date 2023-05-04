@@ -9,7 +9,7 @@ import { storage } from '../firebase.config';
 import { toast } from 'react-toastify'
 import { db } from '../firebase.config';
 
-import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, query, addDoc } from 'firebase/firestore';
+import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, query, addDoc, arrayUnion } from 'firebase/firestore';
 import '../styles/myorders.css'
 import { async } from '@firebase/util';
 import { useNavigate } from 'react-router-dom';
@@ -155,17 +155,23 @@ const Tr = ({ outer_item, data, updateStatus }) => {
             let metadataURL = ipfsURL;
 
             //actually create the NFT
-            // let transaction = await contract.createToken(add, metadataURL);
-            // const res = await transaction.wait();
+            let transaction = await contract.createToken(add, metadataURL);
+            const res = await transaction.wait();
             // let transaction = await contract.getLatestIdToListedToken();
-            // let transaction = await contract.getCurrentToken();
-            let transaction = await contract.getMyNFTs();
+            let transaction1 = await contract.getCurrentToken();
+            // let transaction = await contract.getMyNFTs();
 
-            console.log(transaction);
+            console.log(transaction1.toString());
+
+            console.log("NFT minted successfully");
+
+            return transaction1.toString();
 
 
-            alert("Successfully listed your NFT!");
-            updateMessage("");
+
+
+
+            // updateMessage("");
         } catch (e) {
             console.log(e);
             alert("Upload error" + e);
@@ -192,10 +198,9 @@ const Tr = ({ outer_item, data, updateStatus }) => {
         console.log("uploading...", uploadJson);
         const ipfsResponse = await uploadJSONToIPFS(uploadJson);
         if (ipfsResponse.success) {
-            const docRef = collection(db, "warranty", data.doc_id, id);
-            await addDoc(docRef, {
-                ...uploadJson,
-                ipfsUrl: ipfsResponse.pinataURL,
+            const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
+            await setDoc(docRef, {
+                tokendIds: []
             });
 
             return ipfsResponse.pinataURL;
@@ -213,22 +218,37 @@ const Tr = ({ outer_item, data, updateStatus }) => {
 
     const processOrder = async (id, data) => {
 
-        data.Items.forEach(async (product) => {
+        await data.Items.forEach(async (product) => {
 
-            // const ipfsURL = await uploadProductDataToIpfs(id, product);
+            const ipfsURL = await uploadProductDataToIpfs(id, product);
+            // const ipfsURL = "klfajf";
+            if (ipfsURL) {
 
-            await listNFT("ipfsURL");
-            // if (ipfsURL) {
+                const tokenId = await listNFT("ipfsURL");
+                // const tokenId = 14;
+                const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
+                await updateDoc(docRef, {
+                    tokendIds: arrayUnion(tokenId)
+                });
+
+                const orderRef = doc(db, 'neworder', data.doc_id, "myorders", id)
+                await updateDoc(orderRef, {
+                    OrderStatus: "Approved"
+                });
+
+                updateStatus(outer_item, data, false, true);
 
 
-            // }
-            // else {
-            //     // console.log("Failed to upload product data to ipfs");
-            // }
+
+            }
+            else {
+                console.log("Failed to upload product data to ipfs");
+            }
 
 
 
         })
+
 
 
         // If IPFS upload is successful, save the product information to the database using addDoc()
@@ -239,23 +259,15 @@ const Tr = ({ outer_item, data, updateStatus }) => {
 
     const mintNFT = async (id, data) => {
 
+
         if (data.OrderStatus === "Pending") {
 
-            // updateStatus(outer_item, data, true, false);
+            updateStatus(outer_item, data, true, false);
 
             await processOrder(id, data);
-            // console.log("mint", data.Items[0], id);
-
-            // await listNFT();
-
-            // const orderRef = doc(db, 'neworder', data.doc_id, "myorders", id)
-            // await updateDoc(orderRef, {
-            //     OrderStatus: "Approved"
-            // });
 
 
 
-            // updateStatus(outer_item, data, false, true);
 
         }
         else if (data.OrderStatus === "Approved") {

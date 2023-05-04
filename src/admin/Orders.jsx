@@ -9,7 +9,7 @@ import { storage } from '../firebase.config';
 import { toast } from 'react-toastify'
 import { db } from '../firebase.config';
 
-import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, query, addDoc, arrayUnion } from 'firebase/firestore';
+import { setDoc, doc, updateDoc, collection, onSnapshot, getDocs, getDoc, query, addDoc, arrayUnion } from 'firebase/firestore';
 import '../styles/myorders.css'
 import { async } from '@firebase/util';
 import { useNavigate } from 'react-router-dom';
@@ -178,9 +178,23 @@ const Tr = ({ outer_item, data, updateStatus }) => {
         }
     }
 
+    
 
-    const viewNFT = () => {
-        alert("view nft!");
+    const viewNFT = async (id) => {
+
+        const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            // console.log(data["tokendIds"]);
+            data["tokendIds"].forEach((item) => {
+                
+            })
+        }
+        else {
+            console.error("failed to load NFTs")
+        }
+
     }
 
     const uploadProductDataToIpfs = async (id, item) => {
@@ -272,7 +286,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
         }
         else if (data.OrderStatus === "Approved") {
 
-            viewNFT();
+            viewNFT(id);
         }
     }
 

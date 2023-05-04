@@ -27,7 +27,7 @@ const AddProducts = () => {
 
       const storageRef = ref(
         storage,
-        `productImages/₹{Date.now() + enterProductImg.name}`
+        `productImages/${Date.now() + enterProductImg.name}`
       );
       const uploadTask = uploadBytesResumable(storageRef, enterProductImg);
 
@@ -95,7 +95,7 @@ const AddProducts = () => {
                     <span>Product title</span>
                     <input
                       type="text"
-                      placeholder="Double sofa"
+                      placeholder="Watch"
                       value={enterTitle}
                       onChange={(e) => setEnterTitle(e.target.value)}
                       required

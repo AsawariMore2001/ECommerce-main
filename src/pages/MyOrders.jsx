@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Helmet from '../components/Helmet/Helmet'
 import { Container, Col, Row, Form, FormGroup } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigation } from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile, getAuth, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -16,13 +16,14 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import useGetDataNew from "../custom-hooks/useGetDataNew";
 import useAuth from "../custom-hooks/useAuth"
+// import { useNavigate } from 'react-router-dom';
 
 const MyOrders = () => {
 
     const [ordersData, setOrdersData] = useState([]);
-    const [loading, setLoading] = useState(false);   
+    const [loading, setLoading] = useState(false);
     const { currentUser } = useAuth()
-     // const collectionRef = doc(db, 'orders', currentUser.uid)
+    // const collectionRef = doc(db, 'orders', currentUser.uid)
     // const { data: products, loading } = useGetDataNew(collectionRef);
     const handleClick = async () => {
         // console.log("clicked");
@@ -34,7 +35,7 @@ const MyOrders = () => {
 
     }
 
-    
+
     useEffect(() => {
 
         const getData = async (uid) => {
@@ -71,7 +72,7 @@ const MyOrders = () => {
             setLoading(false)
 
             // setOrdersData(querySnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })))
-       
+
         }
         getData();
 
@@ -109,6 +110,11 @@ const MyOrders = () => {
 };
 
 const Tr = ({ outer_item }) => {
+    let navigate = useNavigate();
+    const viewNFT = (id) => {
+
+        navigate("/ProductWarranty", { state: { id: id } });
+    }
 
     return (<>
         {
@@ -122,14 +128,14 @@ const Tr = ({ outer_item }) => {
             <td></td>
             <td></td>
             <motion.td whileHover={{ scale: 1.2 }}><center>
-            <Link to="/ProductWarranty">
-                <motion.i
-                    whileTap={{ scale: 1.2 }}
-                    className="ri-shield-flash-line"
-                ></motion.i>{" "}
-            </Link>
-        </center>
-        </motion.td>
+                <button onClick={() => { viewNFT(outer_item.id) }}>
+                    <motion.i
+                        whileTap={{ scale: 1.2 }}
+                        className="ri-shield-flash-line"
+                    ></motion.i>{" "}
+                </button>
+            </center>
+            </motion.td>
 
         </tr>
     </>
@@ -145,7 +151,7 @@ const Trr = ({ item }) => {
         <td><center>{item.productName}</center></td>
         <td><center>₹{item.price}</center></td>
         <td><center>{item.quantity} </center></td>
-       
+
 
     </tr>)
 }

@@ -23,6 +23,7 @@ const ProductWarranty = () => {
     const [loading, setLoading] = useState(false);
     const [nftData, setNftData] = useState({});
     const ethers = require("ethers");
+    console.log(loaction.state.id);
 
     const check = async () => {
         const tokenURI = await getNftMetadata(27);
@@ -49,7 +50,6 @@ const ProductWarranty = () => {
         let transaction = await contract.tokenURI(tokenId);
         return transaction;
     }
-    // console.log(loaction.state.id);
     useEffect(() => {
 
         const getData = async () => {
@@ -58,6 +58,7 @@ const ProductWarranty = () => {
             const auth = getAuth();
 
             try {
+
                 const docRef = doc(db, "warranty", auth.currentUser.uid, loaction.state.id, "NFTs");
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
@@ -90,7 +91,7 @@ const ProductWarranty = () => {
 
 
                         }).catch((err) => {
-                            setLoading(true);
+                            setLoading(true)
                         })
 
 

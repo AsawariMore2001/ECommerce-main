@@ -27,7 +27,8 @@ const cartSlice = createSlice({
                     imgUrl: newItem.imgUrl,
                     price: newItem.price,
                     quantity: 1,
-                    totalPrice: newItem.price
+                    totalPrice: newItem.price,
+                    warranty: newItem.warranty
                 })
             }
             else {

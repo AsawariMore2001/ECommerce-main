@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Helmet from '../components/Helmet/Helmet'
 import { Container, Col, Row, Form, FormGroup } from 'reactstrap'
-import { Link } from 'react-router-dom'
+import { Link, redirect } from 'react-router-dom'
 import { createUserWithEmailAndPassword, updateProfile, getAuth, onAuthStateChanged } from "firebase/auth";
 import { auth } from '../firebase.config';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
@@ -136,6 +136,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
 
     const ethers = require("ethers");
     const [message, updateMessage] = useState("");
+    let navigate = useNavigate();
 
     async function listNFT(ipfsURL) {
 
@@ -178,23 +179,10 @@ const Tr = ({ outer_item, data, updateStatus }) => {
         }
     }
 
-    
+
 
     const viewNFT = async (id) => {
-
-        const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            // console.log(data["tokendIds"]);
-            data["tokendIds"].forEach((item) => {
-                
-            })
-        }
-        else {
-            console.error("failed to load NFTs")
-        }
-
+        navigate("/ProductWarranty", { state: { id: id } });
     }
 
     const uploadProductDataToIpfs = async (id, item) => {
@@ -212,10 +200,6 @@ const Tr = ({ outer_item, data, updateStatus }) => {
         console.log("uploading...", uploadJson);
         const ipfsResponse = await uploadJSONToIPFS(uploadJson);
         if (ipfsResponse.success) {
-            const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
-            await setDoc(docRef, {
-                tokendIds: []
-            });
 
             return ipfsResponse.pinataURL;
         } else {
@@ -224,13 +208,16 @@ const Tr = ({ outer_item, data, updateStatus }) => {
             return null;
         }
 
-
-
-
     }
 
 
     const processOrder = async (id, data) => {
+
+        const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
+        await setDoc(docRef, {
+            tokendIds: []
+        });
+
 
         await data.Items.forEach(async (product) => {
 
@@ -238,7 +225,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
             // const ipfsURL = "klfajf";
             if (ipfsURL) {
 
-                const tokenId = await listNFT("ipfsURL");
+                const tokenId = await listNFT(ipfsURL);
                 // const tokenId = 14;
                 const docRef = doc(db, "warranty", data.doc_id, id, "NFTs");
                 await updateDoc(docRef, {

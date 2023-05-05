@@ -26,6 +26,7 @@ const ProductCard = ({ item }) => {
         productName: item.productName,
         price: item.price,
         imgUrl: item.imgUrl,
+        warranty: item.warranty
       })
     );
     await addToFirebaseCart(item);
@@ -42,6 +43,7 @@ const ProductCard = ({ item }) => {
         productName: item.productName,
         price: item.price,
         imgUrl: item.imgUrl,
+        warranty: item.warranty
       });
     }
     catch (err) {

@@ -151,7 +151,7 @@ const Checkout = () => {
       Items: cartItem,
       TotalAmount: totalAmount,
       TotalQuantity: totalQty,
-      OrderStatus: "pending"
+      OrderStatus: "Pending"
     });
 
     await emptyCartFirebase();

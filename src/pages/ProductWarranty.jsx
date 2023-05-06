@@ -117,7 +117,7 @@ const ProductWarranty = () => {
 
     return (
         <Helmet title="Product Warranty">
-            <CommonSection title="Product Warratny" />
+            <CommonSection title="Product Warranty" />
             <section className="pt-0>">{
                 loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Loading...</h5></Col> :
                     <Container>

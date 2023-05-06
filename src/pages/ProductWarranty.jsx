@@ -91,6 +91,7 @@ const ProductWarranty = () => {
 
 
                         }).catch((err) => {
+                            console.log("Server Error : ",err)
                             setLoading(true)
                         })
 

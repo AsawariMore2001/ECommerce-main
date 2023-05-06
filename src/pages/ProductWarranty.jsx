@@ -89,14 +89,17 @@ const ProductWarranty = () => {
                                 }
                             })
 
+                            setLoading(false);
+
 
                         }).catch((err) => {
-                            setLoading(true)
+
+                            alert("NFT is minted! It will soon appear here, Please try again after some time");
+                            
                         })
 
 
 
-                        // alert("NFT is minted! It will soon appear here, Please try again after some time");
 
 
 
@@ -107,7 +110,7 @@ const ProductWarranty = () => {
             } catch (error) {
                 console.log(error)
             }
-            setLoading(false)
+
 
         }
         getData();
@@ -121,7 +124,7 @@ const ProductWarranty = () => {
             <section className="pt-0>">{
                 loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Loading...</h5></Col> :
                     <Container>
-                        <button onClick={check}>check</button>
+                        {/* <button onClick={check}>check</button> */}
                         {
                             Object.entries(nftData).map(([key, value]) => (
                                 <Tr item={value} key={value.id} />

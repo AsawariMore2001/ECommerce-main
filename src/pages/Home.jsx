@@ -25,10 +25,10 @@ const Home = () => {
 
   useEffect(() => {
     const filteredTrendingProducts = products.filter(
-      (item) => item.category === "chair"
+      (item) => item.category === "camera"
     );
     const filteredBestSalesProducts = products.filter(
-      (item) => item.category === "sofa"
+      (item) => item.category === "mobile"
     );
     const filteredMobileProducts = products.filter(
       (item) => item.category === "mobile"

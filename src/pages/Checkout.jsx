@@ -14,7 +14,7 @@ import useAuth from '../custom-hooks/useAuth';
 import { toast } from 'react-toastify'
 import { cartActions } from "../redux/slices/cartSlice";
 const Checkout = () => {
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   const totalQty = useSelector((state) => state.cart.totalQuantity);
   const totalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItem = useSelector((state) => state.cart.cartItems)
@@ -32,15 +32,15 @@ const Checkout = () => {
     Address: "",
   })
 
-  const loadScript=(src)=>{
-    return new Promise((resolve)=>{
+  const loadScript = (src) => {
+    return new Promise((resolve) => {
       const script = document.createElement('script')
       script.src = src
-      script.onload = () =>{
+      script.onload = () => {
         resolve(true)
       }
 
-      script.onerror=()=>{
+      script.onerror = () => {
         resolve(false)
       }
 
@@ -51,7 +51,7 @@ const Checkout = () => {
   const displayRazorpay = async (amount) => {
     const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js")
 
-    if(!res){
+    if (!res) {
       alert('You are offline... Failed to load Razorpay SDK')
       return
     }
@@ -64,13 +64,13 @@ const Checkout = () => {
       description: "Thanks for shopping",
       image: '',
 
-      handler: function(response){
-        if(response.razorpay_payment_id){
+      handler: function (response) {
+        if (response.razorpay_payment_id) {
           placeOrder()
           navigate("/")
         }
       },
-      prefill:{
+      prefill: {
         name: "Multimart"
       }
     };
@@ -252,10 +252,10 @@ const Checkout = () => {
                       <br />
                       Free shipping
                     </span>
-                    <span>$0</span>
+                    <span>₹0</span>
                   </h6>
                   <h4>
-                    Total Cost: <span>${totalAmount}</span>
+                    Total Cost: <span>₹{totalAmount}</span>
                   </h4>
                 </div>
                 <button

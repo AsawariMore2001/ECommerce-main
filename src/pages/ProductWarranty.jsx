@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, Await, useNavigate } from "react-router-dom";
 import Helmet from "../components/Helmet/Helmet";
 import CommonSection from "../components/UI/CommonSection";
 import "../styles/product-details.css";
@@ -23,15 +23,110 @@ const ProductWarranty = () => {
     const [loading, setLoading] = useState(false);
     const [nftData, setNftData] = useState({});
     const ethers = require("ethers");
+    let navigate = useNavigate();
     console.log(loaction.state.id);
 
     const check = async () => {
-        const tokenURI = await getNftMetadata(27);
-        console.log(tokenURI);
-        let meta = await axios.get(tokenURI);
-        meta = meta.data;
-        console.log(meta);
+        // const tokenURI = await getNftMetadata(27);
+        // console.log(tokenURI);
+        // let meta = await axios.get(tokenURI);
+        // meta = meta.data;
+        // console.log(meta);
+        console.log(nftData);
     }
+
+    const showData = (displayItem) => {
+        console.log("displayItem", displayItem);
+
+        setNftData((prev) => {
+            return {
+                ...prev, [displayItem.id]: { ...displayItem }
+            }
+        })
+    }
+
+
+    const processNft = (meta) => {
+
+        return {
+            timestamp: meta.timestamp,
+            customer: meta.customer,
+            id: meta.id,
+            quantity: meta.quantity,
+            productName: meta.productName,
+            price: meta.price,
+            warranty: meta.warranty,
+            imgUrl: meta.imgUrl
+        };
+
+
+
+
+    }
+
+    const resolveNft = async (item) => {
+
+        const tokenURI = await getNftMetadata(item);
+        // return tokenURI;
+        // console.log("resolveNft", tokenURI);
+
+        try {
+            const meta = await axios.get(tokenURI);
+            return meta.data;
+        }
+        catch (err) {
+            alert("NFT is minted! Soon it will appear here....");
+            navigate("/MyOrders");
+
+        }
+
+
+        // meta = meta.data;
+        // let displayItem = {
+        //     timestamp: meta.timestamp,
+        //     customer: meta.customer,
+        //     id: meta.id,
+        //     quantity: meta.quantity,
+        //     productName: meta.productName,
+        //     price: meta.price,
+        //     warranty: meta.warranty,
+        //     imgUrl: meta.imgUrl
+        // };
+
+        // return displayItem;
+
+
+        // axios.get(tokenURI).then((meta) => {
+
+        //     meta = meta.data;
+        //     let displayItem = {
+        //         timestamp: meta.timestamp,
+        //         customer: meta.customer,
+        //         id: meta.id,
+        //         quantity: meta.quantity,
+        //         productName: meta.productName,
+        //         price: meta.price,
+        //         warranty: meta.warranty,
+        //         imgUrl: meta.imgUrl
+        //     };
+
+        //     setNftData((prev) => {
+        //         return {
+        //             ...prev, item: { ...displayItem }
+        //         }
+        //     })
+
+        // setLoading(false);
+
+
+        // }).catch((err) => {
+
+        //     alert("NFT is minted! It will soon appear here, Please try again after some time");
+
+        // })
+
+    }
+
 
     const getNftMetadata = async (tokenId) => {
 
@@ -63,48 +158,13 @@ const ProductWarranty = () => {
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    data["tokendIds"].forEach(async (item) => {
 
-                        const tokenURI = await getNftMetadata(item);
-                        console.log(tokenURI);
-
-
-                        axios.get(tokenURI).then((meta) => {
-
-                            meta = meta.data;
-                            let displayItem = {
-                                timestamp: meta.timestamp,
-                                customer: meta.customer,
-                                id: meta.id,
-                                quantity: meta.quantity,
-                                productName: meta.productName,
-                                price: meta.price,
-                                warranty: meta.warranty,
-                                imgUrl: meta.imgUrl
-                            };
-
-                            setNftData((prev) => {
-                                return {
-                                    ...prev, item: { ...displayItem }
-                                }
-                            })
-
-                            setLoading(false);
-
-
-                        }).catch((err) => {
-
-                            alert("NFT is minted! It will soon appear here, Please try again after some time");
-                            
-                        })
-
-
-
-
-
-
-
-                    })
+                    const orderWarranty = await Promise.all(data["tokendIds"].map(resolveNft));
+                    orderWarranty.map(processNft).map(showData);
+                    setLoading(false);
+                }
+                else {
+                    console.log("order not found");
                 }
 
             } catch (error) {
@@ -121,6 +181,7 @@ const ProductWarranty = () => {
     return (
         <Helmet title="Product Warranty">
             <CommonSection title="Product Warranty" />
+            <button onClick={check}>check</button>
             <section className="pt-0>">{
                 loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Loading...</h5></Col> :
                     <Container>
@@ -142,7 +203,7 @@ const ProductWarranty = () => {
 const Tr = ({ item }) => {
 
     return <Row>
-        <Col lg='6'>
+        <Col lg='3'>
             <img src={item.imgUrl} alt="" />
         </Col>
 
@@ -156,11 +217,14 @@ const Tr = ({ item }) => {
                 </div>
                 <h5>Warranty period:  {item.warranty} Year</h5>
             </div>
-            <table><br />
-                <tr>Product id: {item.id}</tr>
-                <br />
-                <tr><td> Issued On: {item.timestamp}</td>
-                </tr><br />
+            <table>
+                <tbody>
+                    <br />
+                    <tr>Product id: {item.id}</tr>
+                    <br />
+                    <tr><td> Issued On: {item.timestamp}</td>
+                    </tr><br />
+                </tbody>
             </table>
 
         </Col>

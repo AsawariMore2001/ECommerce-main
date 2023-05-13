@@ -82,7 +82,7 @@ const MyOrders = () => {
         <section>{
             loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Loading Orders</h5></Col> :
                 <Container>
-                    <button onClick={handleClick}> check </button>
+                    {/* <button onClick={handleClick}> check </button> */}
                     <table className='table border'>
                         <thead>
                             <tr>

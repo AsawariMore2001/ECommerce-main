@@ -6,6 +6,9 @@ import { motion } from 'framer-motion';
 import logo from '../../assets/images/eco-logo.png';
 import userIcon from '../../assets/images/user-icon.png';
 
+// import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+// import { storage } from '../firebase.config';
+
 import { useSelector } from 'react-redux';
 import useAuth from '../../custom-hooks/useAuth';
 import { Link } from 'react-router-dom';
@@ -46,6 +49,7 @@ const Header = () => {
     const navigate = useNavigate();
     const { currentUser } = useAuth()
     const profileActionRef = useRef(null)
+    const inputFile = useRef(null)
 
     const stickyHeaderFunc = () => {
         // window.addEventListener('scroll', () => {
@@ -67,6 +71,42 @@ const Header = () => {
         }).catch(err => {
             toast.error(err.message)
         })
+
+    }
+    const logIn = () => {
+        navigate('/login');
+    }
+    const dashboard = () => {
+        navigate('/dashboard');
+    }
+    const signUp = () => {
+        navigate('/signup');
+    }
+
+    const changeProfilePhoto = () => {
+
+        //     // `current` points to the mounted file input element
+        //     inputFile.current.click();
+
+        //     const storageRef = ref(storage, `images/₹{Date.now() + username}`)
+        //   const uploadTask = uploadBytesResumable(storageRef, file)
+        //   uploadTask.on('state_changed',
+        //     (error) => {
+        //       console.log(error)
+        //     },
+        //     () => {
+        //       getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+        //         await updateProfile(currentUser, {
+        //           displayName: username,
+        //           photoURL: url
+        //         })
+        //         await updateDoc(doc(db, 'users', user.uid), {
+        //           photoURL: url
+        //         })
+        //       });
+        //     }
+        //   );
+
 
     }
     useEffect(() => {
@@ -94,6 +134,7 @@ const Header = () => {
                             <div>
                                 <h1>MultiMart</h1>
                             </div>
+                            <input type='file' id='file' ref={inputFile} style={{ display: 'none' }} />
                         </div>
                         <div className="navigation" ref={menuRef} onClick={menuToggle}>
                             <motion.ul className="menu">
@@ -126,7 +167,7 @@ const Header = () => {
 
                             <div className="profile" onClick={toggleProfileActions}>
                                 <motion.img whileTap={{ scale: 1.2 }}
-                                    src={currentUser ? currentUser.photoURL : userIcon}
+                                    src={currentUser ? currentUser.photoURL ? currentUser.photoURL : userIcon : userIcon}
                                     alt=""
                                 />
 
@@ -135,18 +176,19 @@ const Header = () => {
                                     ref={profileActionRef}
                                 >
                                     {currentUser ? (
-                                        <div>
+                                        <div className='actions'>
+                                            {/* <span onClick={changeProfilePhoto}>Profile Photo</span> */}
                                             <span onClick={logout}>Logout</span>
+                                            <span onClick={dashboard}>Dashboard</span>
+
                                         </div>
                                     ) : (
-                                        <div>
+                                        <div className='actions'>
 
 
-                                            <Link to='/signup'>Signup </Link>
+                                            <span onClick={signUp}>Signup</span>
+                                            <span onClick={logIn}>Login</span>
 
-                                            <Link to='/login'>login</Link>
-
-                                            <Link to='/dashboard'>Dashboard</Link>
 
                                         </div>
                                     )}

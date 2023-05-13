@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 import { async } from '@firebase/util'
 import { useDispatch } from "react-redux";
 import { cartActions } from "../redux/slices/cartSlice";
-import { doc, getDocs, setDoc,collection } from 'firebase/firestore';
+import { doc, getDocs, setDoc, collection } from 'firebase/firestore';
 import { db, storage } from "../firebase.config";
 
 
@@ -44,7 +44,7 @@ const Login = () => {
       });
 
       console.log("cart loaded");
-      navigate('/checkout')
+      navigate('/home')
 
     } catch (error) {
       setLoading(false)

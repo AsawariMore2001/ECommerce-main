@@ -181,7 +181,7 @@ const ProductWarranty = () => {
     return (
         <Helmet title="Product Warranty">
             <CommonSection title="Product Warranty" />
-            <button onClick={check}>check</button>
+            {/* <button onClick={check}>check</button> */}
             <section className="pt-0>">{
                 loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Loading...</h5></Col> :
                     <Container>

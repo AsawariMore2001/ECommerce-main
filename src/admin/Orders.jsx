@@ -18,6 +18,7 @@ import useGetDataNew from "../custom-hooks/useGetDataNew";
 import useAuth from "../custom-hooks/useAuth"
 import Marketplace from "../Marketplace.json";
 import { uploadJSONToIPFS } from "../pinata"
+import "../styles/admin_order.css"
 
 
 const Orders = () => {
@@ -288,7 +289,7 @@ const Tr = ({ outer_item, data, updateStatus }) => {
                     <td>{data.customer_name}</td>
                     <td>{data.TotalAmount}</td>
                     <td>{data.TotalQuantity}</td>
-                    <td><button onClick={() => { mintNFT(outer_item, data) }}>{data.OrderStatus === "Approved" ? "View NFT" : "Mint NFT"}</button></td>
+                    <td><button className='mint__btn' onClick={() => { mintNFT(outer_item, data) }}>{data.OrderStatus === "Approved" ? "View NFT" : "Mint NFT"}</button></td>
                 </tr>
         }
 

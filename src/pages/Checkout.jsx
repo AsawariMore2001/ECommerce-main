@@ -222,7 +222,7 @@ const Checkout = () => {
         loading ? <Col lg='12' className='text-center' ><h5 className='fw-bold'>Processing Order</h5></Col> :
 
           <Container>
-            <button onClick={emptyCartFirebase}>check</button>
+            {/* <button onClick={emptyCartFirebase}>check</button> */}
             <Row>
               <Col lg="8">
                 <h6 className="mb-4 fw-bold">Billing Information</h6>
